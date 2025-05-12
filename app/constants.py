@@ -1,0 +1,2 @@
+MUSIC_STORAGE_PATH = './music'
+LIMIT_LENGTH = 600
