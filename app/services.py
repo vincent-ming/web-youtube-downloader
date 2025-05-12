@@ -31,10 +31,8 @@ def download_by_pytubefix(req: DownloadRequest):
         return youtube_stream.download(output_path=MUSIC_STORAGE_PATH, filename=filename)
 
     except RegexMatchError:
-        #log here
         raise InvalidUrlError(url)
     except VideoUnavailable as e:
-        #log here
         raise InvalidVideoError(e.__str__())
 
 
