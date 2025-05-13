@@ -5,9 +5,10 @@ import time
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, JSONResponse
 
-from app import services, logConfig
-from app.exceptions import WYDApiError
-from app.models import DownloadInfo
+import logConfig
+import services
+from exceptions import WYDApiError
+from models import DownloadInfo
 
 app = FastAPI()
 
