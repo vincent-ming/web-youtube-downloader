@@ -9,7 +9,7 @@ class AudioFormat(str, Enum):
     MP3 = "mp3"
 
 
-class DownloadRequest(BaseModel):
+class DownloadInfo(BaseModel):
     url: str
     filename: Optional[str] = None
     audio_format: Optional[AudioFormat] = AudioFormat.MP3

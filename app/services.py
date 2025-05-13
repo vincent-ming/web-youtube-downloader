@@ -7,19 +7,19 @@ from pytubefix.exceptions import RegexMatchError, VideoUnavailable
 
 from app.constants import MUSIC_STORAGE_PATH, LIMIT_LENGTH
 from app.exceptions import VideoTooLongError, InvalidUrlError, InvalidVideoError
-from app.models import DownloadRequest
+from app.models import DownloadInfo
 
 
-def download(req: DownloadRequest):
-    file_path = download_by_pytubefix(req)
-    if req.audio_format == 'mp3':
+def download(info: DownloadInfo):
+    file_path = download_by_pytubefix(info)
+    if info.audio_format == 'mp3':
         file_path = convert_to_mp3(file_path)
     return file_path
 
 
-def download_by_pytubefix(req: DownloadRequest):
-    url = req.url
-    filename = req.filename + '.' + req.audio_format.lower() if req.filename else None
+def download_by_pytubefix(info: DownloadInfo):
+    url = info.url
+    filename = info.filename + '.' + info.audio_format.lower() if info.filename else None
     try:
 
         youtube = YouTube(url, on_progress_callback=on_progress)
