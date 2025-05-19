@@ -1,3 +1,4 @@
 fastapi[standard]==0.115.0
 pydub==0.25.1
 pytubefix==8.13.1
+mutagen==1.47.0
