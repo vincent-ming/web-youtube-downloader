@@ -3,7 +3,7 @@ import os
 from logging.handlers import TimedRotatingFileHandler
 
 
-def init():
+def log_init():
     if not os.path.exists('./logs'):
         os.makedirs('./logs')
 

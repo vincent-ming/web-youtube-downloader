@@ -9,10 +9,17 @@ class AudioFormat(str, Enum):
     MP3 = "mp3"
 
 
-class DownloadInfo(BaseModel):
-    url: str
-    filename: Optional[str] = None
-    audio_format: Optional[AudioFormat] = AudioFormat.MP3
+class MetaData(BaseModel):
+    title: Optional[str] = None
+    artist: Optional[str] = None
+    album: Optional[str] = None
 
-    def __init__(self, url: str, filename: Optional[str] = None, audio_format: Optional[AudioFormat] = AudioFormat.MP3):
-        super().__init__(url=url, filename=filename, audio_format=audio_format)
+
+class DownloadRequest(BaseModel):
+    url: str
+    audio_format: Optional[AudioFormat] = AudioFormat.M4A
+    metadata: Optional[MetaData] = MetaData
+
+    def __init__(self, url: str, audio_format: Optional[AudioFormat] = AudioFormat.M4A,
+                 metadata: Optional[MetaData] = None):
+        super().__init__(url=url, audio_format=audio_format, metadata=metadata)
