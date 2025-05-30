@@ -18,8 +18,17 @@ class MetaData(BaseModel):
 class DownloadRequest(BaseModel):
     url: str
     audio_format: Optional[AudioFormat] = AudioFormat.M4A
-    metadata: Optional[MetaData] = MetaData
+    metadata: Optional[MetaData] = None
 
     def __init__(self, url: str, audio_format: Optional[AudioFormat] = AudioFormat.M4A,
                  metadata: Optional[MetaData] = None):
         super().__init__(url=url, audio_format=audio_format, metadata=metadata)
+
+
+class FileData(BaseModel):
+    tmp_name: str
+    output_file_name: Optional[str] = None
+    output_file_path: Optional[str] = None
+
+    def __init__(self, tmp_name: str):
+        super().__init__(tmp_name=tmp_name)

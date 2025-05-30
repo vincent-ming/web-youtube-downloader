@@ -1,6 +1,5 @@
 import logging
 import time
-from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, JSONResponse
@@ -13,11 +12,12 @@ from models import DownloadRequest
 app = FastAPI()
 
 config.log_init()
+config.scheduler_init()
 
 
 @app.exception_handler(WYDApiError)
 async def api_exception_handler(req: DownloadRequest, exc: WYDApiError):
-    logging.error(f'Error occur, {exc}')
+    logging.error(f'Error occur: {exc}')
     return JSONResponse(status_code=500, content={'detail': f'{exc.message}'})
 
 
@@ -38,9 +38,15 @@ async def record_request(req: Request, call_next):
     return response
 
 
+@app.get("/")
+async def root():
+    return 'Welcome to Youtube Music Downloader'
+
+
 @app.post("/download_music")
 async def download_music(req: DownloadRequest):
     logging.info(f'Download start. request: {req}')
-    file_path = services.generate_music(req)
-    file_name = Path(file_path).name
+    file_data = services.generate_music(req)
+    file_path = file_data.output_file_path
+    file_name = file_data.output_file_name
     return FileResponse(file_path, filename=file_name)
