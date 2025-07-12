@@ -2,7 +2,8 @@ import logging
 import time
 
 from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 import config
 import services
@@ -10,6 +11,8 @@ from exceptions import WYDApiError
 from models import DownloadRequest
 
 app = FastAPI()
+
+templates = Jinja2Templates(directory="templates")
 
 config.log_init()
 config.scheduler_init()
@@ -38,9 +41,9 @@ async def record_request(req: Request, call_next):
     return response
 
 
-@app.get("/")
-async def root():
-    return 'Welcome to Youtube Music Downloader'
+@app.get("/", response_class=HTMLResponse)
+async def get_index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.post("/download_music")
@@ -49,4 +52,5 @@ async def download_music(req: DownloadRequest):
     file_data = services.generate_music(req)
     file_path = file_data.output_file_path
     file_name = file_data.output_file_name
-    return FileResponse(file_path, filename=file_name)
+    print(file_data)
+    return FileResponse(file_path, filename=file_name, media_type="audio/m4a")
