@@ -1,4 +1,5 @@
 import logging
+import sys
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
@@ -11,17 +12,22 @@ from constants import TEMP_FILE_LIVE_TIME_MINUTES
 
 def log_init():
     logs_folder = Path('./logs')
-    if not logs_folder.exists():
-        logs_folder.mkdir()
+    logs_folder.mkdir(exist_ok=True)
 
-    log_level = 'INFO'
-    log_path = './logs/wyd.log'
+    log_level = logging.INFO
+    log_path = logs_folder / 'wyd.log'
     log_format = '%(asctime)s | %(levelname)s | %(thread)d | %(filename)s-%(lineno)d | %(message)s'
+    formatter = logging.Formatter(log_format)
 
-    time_rotate_handler = TimedRotatingFileHandler(filename=log_path, when='midnight', interval=1,
-                                                   backupCount=7)
-    time_rotate_handler.suffix = '%Y-%m-%d'
-    logging.basicConfig(level=log_level, format=log_format, handlers={time_rotate_handler})
+    file_handler = TimedRotatingFileHandler(filename=log_path, when='midnight', interval=1,
+                                            backupCount=7)
+    file_handler.setFormatter(formatter)
+    file_handler.suffix = '%Y-%m-%d'
+
+    stream_handler = logging.StreamHandler(sys.stdout)
+    stream_handler.setFormatter(formatter)
+
+    logging.basicConfig(level=log_level, handlers={file_handler, stream_handler})
 
     logging.getLogger('apscheduler').setLevel(logging.WARNING)
 
